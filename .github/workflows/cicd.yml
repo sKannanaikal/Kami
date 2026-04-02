@@ -13,23 +13,23 @@ jobs:
 
     steps:
       - name: "Cloning repository"
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
       
       - name: "Creating build directory"
-      - run: mkdir build
+        run: mkdir build
 
       - name: "Generating makefile"
-      - run: cmake -B ./build/ 
+        run: cmake -B ./build/ 
               -DCMAKE_CXX_COMPILER=g++
               -DCMAKE_C_COMPILER=gcc
               -DCMAKE_BUILD_TYPE=Release
               -S ./src/
 
       - name: "Create binary"
-      - run: cd ./build && make
+        run: cd ./build && make
 
       - name: "Run binary"
-      - run: ./kami
+        run: ./kami
 
       - name: "Cleaning up"
-      - run: make clean
+        run: make clean
