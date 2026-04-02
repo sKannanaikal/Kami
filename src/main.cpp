@@ -1,4 +1,5 @@
 #include <iostream>
+#include "./lib/test.h"
 
 int main() {
 	std::cout << "Hello World!" << std::endl;
