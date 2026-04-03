@@ -29,7 +29,7 @@ jobs:
         run: cd ./build && make
 
       - name: Run binary
-        run: ./kami
+        run: ./build/kami
 
       - name: Cleaning up
         run: make clean
