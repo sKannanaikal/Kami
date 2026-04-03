@@ -32,4 +32,4 @@ jobs:
         run: ./build/kami
 
       - name: Cleaning up
-        run: make clean
+        run: cd ./build && make clean
