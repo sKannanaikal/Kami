@@ -12,24 +12,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "Cloning repository"
+      - name: Cloning repository
         uses: actions/checkout@v4
       
-      - name: "Creating build directory"
+      - name: Creating build directory
         run: mkdir build
 
-      - name: "Generating makefile"
+      - name: Generating makefile
         run: cmake -B ./build/ 
               -DCMAKE_CXX_COMPILER=g++
               -DCMAKE_C_COMPILER=gcc
               -DCMAKE_BUILD_TYPE=Release
               -S ./src/
 
-      - name: "Create binary"
+      - name: Create binary
         run: cd ./build && make
 
-      - name: "Run binary"
+      - name: Run binary
         run: ./kami
 
-      - name: "Cleaning up"
+      - name: Cleaning up
         run: make clean
