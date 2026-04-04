@@ -7,14 +7,14 @@ on:
     branches: [ main ]
 
 jobs:
-  build_and_run:
+  build_and_run_kami:
 
     runs-on: ubuntu-latest
 
     steps:
       - name: Cloning repository
         uses: actions/checkout@v4
-      
+
       - name: Creating build directory
         run: mkdir build
 
@@ -33,3 +33,26 @@ jobs:
 
       - name: Cleaning up
         run: cd ./build && make clean
+
+  build_and_run_tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cloning repository
+        uses: actions/checkout@v4
+
+      - name: Creating build directory
+        run: mkdir ./test/build
+
+      - name: Generating makefile
+        run: cmake -S ./test -B ./test/build
+
+      - name: Create testing binary
+        run: cmake --build ./test/build
+
+      - name: Run test binary
+        run: ./test/build/kami_test
+
+      - name: Cleaning up
+        run: cd ./test/build && make clean
