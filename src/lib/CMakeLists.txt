@@ -1,4 +1,5 @@
-add_library(test_lib SHARED test.cpp)
-target_include_directories(test_lib
+add_library(elf_lib SHARED elf.cpp)
+target_include_directories(elf_lib
 	INTERFACE
-	${CMAKE_CURRENT_SOURCE_DIR})
+	${CMAKE_CURRENT_SOURCE_DIR}
+)

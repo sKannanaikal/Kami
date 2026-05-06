@@ -1,0 +1,226 @@
+\doxysection{elf.\+hpp}
+\hypertarget{elf_8hpp_source}{}\label{elf_8hpp_source}\index{/home/arbiter/Documents/Projects/Kami/src/lib/elf.hpp@{/home/arbiter/Documents/Projects/Kami/src/lib/elf.hpp}}
+\mbox{\hyperlink{elf_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cstdint>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <variant>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#ifndef\ ELF\_HPP}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#define\ ELF\_HPP}}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00022\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structelf__header64}{elf\_header64}}}
+\DoxyCodeLine{00023\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \ e\_ident[16];\ \textcolor{comment}{//\ ELF\ identification:}}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [0–3]\ \ Magic\ bytes\ (0x7F\ 'E'\ 'L'\ 'F')}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [4]\ \ \ \ Class\ (1\ =\ 32-\/bit,\ 2\ =\ 64-\/bit)}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [5]\ \ \ \ Data\ encoding\ (1\ =\ little\ endian,\ 2\ =\ big\ endian)}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [6]\ \ \ \ ELF\ version\ (should\ be\ 1)}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [7]\ \ \ \ OS/ABI}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [8]\ \ \ \ ABI\ version}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [9–15]\ Padding\ (unused)}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ std::uint16\_t\ \ e\_type;\ \ \ \ \ \ \textcolor{comment}{//\ Object\ file\ type\ (relocatable,\ executable,\ shared,\ core)}}
+\DoxyCodeLine{00034\ \ \ \ \ std::uint16\_t\ \ e\_machine;\ \ \ \textcolor{comment}{//\ Target\ architecture\ (e.g.,\ x86-\/64,\ ARM)}}
+\DoxyCodeLine{00035\ \ \ \ \ std::uint32\_t\ \ e\_version;\ \ \ \textcolor{comment}{//\ ELF\ version\ (should\ be\ 1)}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ std::uint64\_t\ \ e\_entry;\ \ \ \ \ \textcolor{comment}{//\ Entry\ point\ virtual\ address\ (where\ execution\ starts)}}
+\DoxyCodeLine{00038\ \ \ \ \ std::uint64\_t\ \ e\_phoff;\ \ \ \ \ \textcolor{comment}{//\ File\ offset\ to\ program\ header\ table}}
+\DoxyCodeLine{00039\ \ \ \ \ std::uint64\_t\ \ e\_shoff;\ \ \ \ \ \textcolor{comment}{//\ File\ offset\ to\ section\ header\ table}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ std::uint32\_t\ \ e\_flags;\ \ \ \ \ \textcolor{comment}{//\ Processor-\/specific\ flags\ (usually\ 0\ on\ x86)}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ std::uint16\_t\ \ e\_ehsize;\ \ \ \ \textcolor{comment}{//\ ELF\ header\ size\ in\ bytes\ (64\ for\ ELF64)}}
+\DoxyCodeLine{00044\ \ \ \ \ std::uint16\_t\ \ e\_phentsize;\ \textcolor{comment}{//\ Size\ of\ one\ program\ header\ entry}}
+\DoxyCodeLine{00045\ \ \ \ \ std::uint16\_t\ \ e\_phnum;\ \ \ \ \ \textcolor{comment}{//\ Number\ of\ program\ header\ entries}}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ std::uint16\_t\ \ e\_shentsize;\ \textcolor{comment}{//\ Size\ of\ one\ section\ header\ entry}}
+\DoxyCodeLine{00048\ \ \ \ \ std::uint16\_t\ \ e\_shnum;\ \ \ \ \ \textcolor{comment}{//\ Number\ of\ section\ header\ entries}}
+\DoxyCodeLine{00049\ \ \ \ \ std::uint16\_t\ \ e\_shstrndx;\ \ \textcolor{comment}{//\ Index\ of\ section\ header\ string\ table}}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \}\ \mbox{\hyperlink{elf_8hpp_a32d2d3deb7a695d0b081edf569c4671c}{Elf\_Header64}};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structelf__header32}{elf\_header32}}}
+\DoxyCodeLine{00058\ \{}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{unsigned}\ \textcolor{keywordtype}{char}\ \ e\_ident[16];\ \textcolor{comment}{//\ Same\ structure\ as\ ELF64\ (see\ above)}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ std::uint16\_t\ \ e\_type;\ \ \ \ \ \ \textcolor{comment}{//\ Object\ file\ type}}
+\DoxyCodeLine{00062\ \ \ \ \ std::uint16\_t\ \ e\_machine;\ \ \ \textcolor{comment}{//\ Target\ architecture}}
+\DoxyCodeLine{00063\ \ \ \ \ std::uint32\_t\ \ e\_version;\ \ \ \textcolor{comment}{//\ ELF\ version}}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00065\ \ \ \ \ std::uint32\_t\ \ e\_entry;\ \ \ \ \ \textcolor{comment}{//\ Entry\ point\ address\ (32-\/bit)}}
+\DoxyCodeLine{00066\ \ \ \ \ std::uint32\_t\ \ e\_phoff;\ \ \ \ \ \textcolor{comment}{//\ Program\ header\ table\ offset}}
+\DoxyCodeLine{00067\ \ \ \ \ std::uint32\_t\ \ e\_shoff;\ \ \ \ \ \textcolor{comment}{//\ Section\ header\ table\ offset}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ std::uint32\_t\ \ e\_flags;\ \ \ \ \ \textcolor{comment}{//\ Processor-\/specific\ flags}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ std::uint16\_t\ \ e\_ehsize;\ \ \ \ \textcolor{comment}{//\ ELF\ header\ size\ (52\ for\ ELF32)}}
+\DoxyCodeLine{00072\ \ \ \ \ std::uint16\_t\ \ e\_phentsize;\ \textcolor{comment}{//\ Size\ of\ program\ header\ entry}}
+\DoxyCodeLine{00073\ \ \ \ \ std::uint16\_t\ \ e\_phnum;\ \ \ \ \ \textcolor{comment}{//\ Number\ of\ program\ header\ entries}}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ std::uint16\_t\ \ e\_shentsize;\ \textcolor{comment}{//\ Size\ of\ section\ header\ entry}}
+\DoxyCodeLine{00076\ \ \ \ \ std::uint16\_t\ \ e\_shnum;\ \ \ \ \ \textcolor{comment}{//\ Number\ of\ section\ header\ entries}}
+\DoxyCodeLine{00077\ \ \ \ \ std::uint16\_t\ \ e\_shstrndx;\ \ \textcolor{comment}{//\ Section\ name\ string\ table\ index}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \}\ \mbox{\hyperlink{elf_8hpp_a6dab4f5c5f90351bf02ec44fe23e06de}{Elf\_Header32}};}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00085\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{elf_8hpp_ab614e98180c5e8c1a9a52f59c4de8302}{OSABI}}\ :\ std::uint8\_t}
+\DoxyCodeLine{00086\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ NONE\ \ \ \ \ \ =\ 0x00,\ \textcolor{comment}{//\ UNIX\ System\ V\ ABI}}
+\DoxyCodeLine{00088\ \ \ \ \ HPUX\ \ \ \ \ \ =\ 0x01,\ \textcolor{comment}{//\ HP-\/UX}}
+\DoxyCodeLine{00089\ \ \ \ \ NETBSD\ \ \ \ =\ 0x02,\ \textcolor{comment}{//\ NetBSD}}
+\DoxyCodeLine{00090\ \ \ \ \ LINUX\ \ \ \ \ =\ 0x03,\ \textcolor{comment}{//\ GNU/Linux}}
+\DoxyCodeLine{00091\ \ \ \ \ SOLARIS\ \ \ =\ 0x06,\ \textcolor{comment}{//\ Solaris}}
+\DoxyCodeLine{00092\ \ \ \ \ AIX\ \ \ \ \ \ \ =\ 0x07,\ \textcolor{comment}{//\ AIX}}
+\DoxyCodeLine{00093\ \ \ \ \ IRIX\ \ \ \ \ \ =\ 0x08,\ \textcolor{comment}{//\ IRIX}}
+\DoxyCodeLine{00094\ \ \ \ \ FREEBSD\ \ \ =\ 0x09,\ \textcolor{comment}{//\ FreeBSD}}
+\DoxyCodeLine{00095\ \ \ \ \ TRU64\ \ \ \ \ =\ 0x0A,\ \textcolor{comment}{//\ Tru64\ UNIX}}
+\DoxyCodeLine{00096\ \ \ \ \ MODESTO\ \ \ =\ 0x0B,\ \textcolor{comment}{//\ Novell\ Modesto}}
+\DoxyCodeLine{00097\ \ \ \ \ OPENBSD\ \ \ =\ 0x0C,\ \textcolor{comment}{//\ OpenBSD}}
+\DoxyCodeLine{00098\ \ \ \ \ OPENVMS\ \ \ =\ 0x0D,\ \textcolor{comment}{//\ OpenVMS}}
+\DoxyCodeLine{00099\ \ \ \ \ NSK\ \ \ \ \ \ \ =\ 0x0E\ \ \textcolor{comment}{//\ HP\ NonStop\ Kernel}}
+\DoxyCodeLine{00100\ \};}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00106\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{elf_8hpp_ac13142f873e76718d2c0007877d9c74a}{Object\_File\_Type}}\ :\ std::uint16\_t}
+\DoxyCodeLine{00107\ \{}
+\DoxyCodeLine{00108\ \ \ \ \ NONE\ \ \ =\ 0x0000,\ \textcolor{comment}{//\ No\ file\ type}}
+\DoxyCodeLine{00109\ \ \ \ \ REL\ \ \ \ =\ 0x0001,\ \textcolor{comment}{//\ Relocatable\ file}}
+\DoxyCodeLine{00110\ \ \ \ \ EXEC\ \ \ =\ 0x0002,\ \textcolor{comment}{//\ Executable\ file}}
+\DoxyCodeLine{00111\ \ \ \ \ DYN\ \ \ \ =\ 0x0003,\ \textcolor{comment}{//\ Shared\ object\ /\ PIE}}
+\DoxyCodeLine{00112\ \ \ \ \ CORE\ \ \ =\ 0x0004,\ \textcolor{comment}{//\ Core\ dump\ file}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ LOOS\ \ \ =\ 0xFE00,\ \textcolor{comment}{//\ OS-\/specific\ range\ start}}
+\DoxyCodeLine{00115\ \ \ \ \ HIOS\ \ \ =\ 0xFEFF,\ \textcolor{comment}{//\ OS-\/specific\ range\ end}}
+\DoxyCodeLine{00116\ }
+\DoxyCodeLine{00117\ \ \ \ \ LOPROC\ =\ 0xFF00,\ \textcolor{comment}{//\ Processor-\/specific\ range\ start}}
+\DoxyCodeLine{00118\ \ \ \ \ HIPROC\ =\ 0xFFFF\ \ \textcolor{comment}{//\ Processor-\/specific\ range\ end}}
+\DoxyCodeLine{00119\ \};}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00125\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{elf_8hpp_a7316aded980abf5b41f093240009690d}{Machine}}\ :\ std::uint16\_t}
+\DoxyCodeLine{00126\ \{}
+\DoxyCodeLine{00127\ \ \ \ \ NONE\ \ \ \ \ \ \ \ =\ 0x0000,\ \textcolor{comment}{//\ No\ machine}}
+\DoxyCodeLine{00128\ \ \ \ \ M32\ \ \ \ \ \ \ \ \ =\ 0x0001,\ \textcolor{comment}{//\ AT\&T\ WE\ 32100}}
+\DoxyCodeLine{00129\ \ \ \ \ SPARC\ \ \ \ \ \ \ =\ 0x0002,\ \textcolor{comment}{//\ SPARC}}
+\DoxyCodeLine{00130\ \ \ \ \ EM\_386\ \ \ \ \ \ =\ 0x0003,\ \textcolor{comment}{//\ Intel\ 80386}}
+\DoxyCodeLine{00131\ \ \ \ \ EM\_68K\ \ \ \ \ \ =\ 0x0004,\ \textcolor{comment}{//\ Motorola\ 68000}}
+\DoxyCodeLine{00132\ \ \ \ \ EM\_88K\ \ \ \ \ \ =\ 0x0005,\ \textcolor{comment}{//\ Motorola\ 88000}}
+\DoxyCodeLine{00133\ \ \ \ \ IAMCU\ \ \ \ \ \ \ =\ 0x0006,\ \textcolor{comment}{//\ Intel\ MCU}}
+\DoxyCodeLine{00134\ \ \ \ \ EM\_860\ \ \ \ \ \ =\ 0x0007,\ \textcolor{comment}{//\ Intel\ 80860}}
+\DoxyCodeLine{00135\ \ \ \ \ MIPS\ \ \ \ \ \ \ \ =\ 0x0008,\ \textcolor{comment}{//\ MIPS\ I\ Architecture}}
+\DoxyCodeLine{00136\ \ \ \ \ S370\ \ \ \ \ \ \ \ =\ 0x0009,\ \textcolor{comment}{//\ IBM\ System/370}}
+\DoxyCodeLine{00137\ \ \ \ \ MIPS\_RS3\_LE\ =\ 0x000A,\ \textcolor{comment}{//\ MIPS\ RS3000\ Little-\/endian}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ PARISC\ \ \ \ \ \ =\ 0x000F,\ \textcolor{comment}{//\ HP\ PA-\/RISC}}
+\DoxyCodeLine{00140\ \ \ \ \ VPP500\ \ \ \ \ \ =\ 0x0011,\ \textcolor{comment}{//\ Fujitsu\ VPP500}}
+\DoxyCodeLine{00141\ \ \ \ \ SPARC32PLUS\ =\ 0x0012,\ \textcolor{comment}{//\ Enhanced\ SPARC\ (SPARC32+)}}
+\DoxyCodeLine{00142\ \ \ \ \ I960\ \ \ \ \ \ \ \ =\ 0x0013,\ \textcolor{comment}{//\ Intel\ 80960}}
+\DoxyCodeLine{00143\ \ \ \ \ PPC\ \ \ \ \ \ \ \ \ =\ 0x0014,\ \textcolor{comment}{//\ PowerPC}}
+\DoxyCodeLine{00144\ \ \ \ \ PPC64\ \ \ \ \ \ \ =\ 0x0015,\ \textcolor{comment}{//\ PowerPC64}}
+\DoxyCodeLine{00145\ \ \ \ \ S390\ \ \ \ \ \ \ \ =\ 0x0016,\ \textcolor{comment}{//\ IBM\ System/390}}
+\DoxyCodeLine{00146\ \ \ \ \ SPU\ \ \ \ \ \ \ \ \ =\ 0x0017,\ \textcolor{comment}{//\ IBM\ SPU/SPC}}
+\DoxyCodeLine{00147\ }
+\DoxyCodeLine{00148\ \ \ \ \ V800\ \ \ \ \ \ \ \ =\ 0x0024,\ \textcolor{comment}{//\ NEC\ V800}}
+\DoxyCodeLine{00149\ \ \ \ \ FR20\ \ \ \ \ \ \ \ =\ 0x0025,\ \textcolor{comment}{//\ Fujitsu\ FR20}}
+\DoxyCodeLine{00150\ \ \ \ \ RH32\ \ \ \ \ \ \ \ =\ 0x0026,\ \textcolor{comment}{//\ TRW\ RH-\/32}}
+\DoxyCodeLine{00151\ \ \ \ \ RCE\ \ \ \ \ \ \ \ \ =\ 0x0027,\ \textcolor{comment}{//\ Motorola\ RCE\ (embedded\ CPU)}}
+\DoxyCodeLine{00152\ \ \ \ \ ARM\ \ \ \ \ \ \ \ \ =\ 0x0028,\ \textcolor{comment}{//\ ARM\ (AArch32)}}
+\DoxyCodeLine{00153\ \ \ \ \ ALPHA\ \ \ \ \ \ \ =\ 0x0029,\ \textcolor{comment}{//\ DEC\ Alpha}}
+\DoxyCodeLine{00154\ \ \ \ \ SH\ \ \ \ \ \ \ \ \ \ =\ 0x002A,\ \textcolor{comment}{//\ Hitachi\ SuperH}}
+\DoxyCodeLine{00155\ \ \ \ \ SPARCV9\ \ \ \ \ =\ 0x002B,\ \textcolor{comment}{//\ SPARC\ v9\ (64-\/bit)}}
+\DoxyCodeLine{00156\ \ \ \ \ TRICORE\ \ \ \ \ =\ 0x002C,\ \textcolor{comment}{//\ Siemens\ TriCore}}
+\DoxyCodeLine{00157\ \ \ \ \ ARC\ \ \ \ \ \ \ \ \ =\ 0x002D,\ \textcolor{comment}{//\ Argonaut\ RISC\ Core}}
+\DoxyCodeLine{00158\ \ \ \ \ H8\_300\ \ \ \ \ \ =\ 0x002E,\ \textcolor{comment}{//\ Hitachi\ H8/300}}
+\DoxyCodeLine{00159\ \ \ \ \ H8\_300H\ \ \ \ \ =\ 0x002F,\ \textcolor{comment}{//\ Hitachi\ H8/300H}}
+\DoxyCodeLine{00160\ \ \ \ \ H8S\ \ \ \ \ \ \ \ \ =\ 0x0030,\ \textcolor{comment}{//\ Hitachi\ H8S}}
+\DoxyCodeLine{00161\ \ \ \ \ H8\_500\ \ \ \ \ \ =\ 0x0031,\ \textcolor{comment}{//\ Hitachi\ H8/500}}
+\DoxyCodeLine{00162\ \ \ \ \ IA\_64\ \ \ \ \ \ \ =\ 0x0032,\ \textcolor{comment}{//\ Intel\ Itanium\ (IA-\/64)}}
+\DoxyCodeLine{00163\ \ \ \ \ MIPS\_X\ \ \ \ \ \ =\ 0x0033,\ \textcolor{comment}{//\ Stanford\ MIPS-\/X}}
+\DoxyCodeLine{00164\ \ \ \ \ COLDFIRE\ \ \ \ =\ 0x0034,\ \textcolor{comment}{//\ Motorola\ ColdFire}}
+\DoxyCodeLine{00165\ \ \ \ \ M68HC12\ \ \ \ \ =\ 0x0035,\ \textcolor{comment}{//\ Motorola\ M68HC12}}
+\DoxyCodeLine{00166\ \ \ \ \ MMA\ \ \ \ \ \ \ \ \ =\ 0x0036,\ \textcolor{comment}{//\ Fujitsu\ MMA\ Multimedia\ Accelerator}}
+\DoxyCodeLine{00167\ \ \ \ \ PCP\ \ \ \ \ \ \ \ \ =\ 0x0037,\ \textcolor{comment}{//\ Siemens\ PCP}}
+\DoxyCodeLine{00168\ \ \ \ \ NCPU\ \ \ \ \ \ \ \ =\ 0x0038,\ \textcolor{comment}{//\ Sony\ nCPU\ embedded\ processor}}
+\DoxyCodeLine{00169\ \ \ \ \ NDR1\ \ \ \ \ \ \ \ =\ 0x0039,\ \textcolor{comment}{//\ Denso\ NDR1}}
+\DoxyCodeLine{00170\ \ \ \ \ STARCORE\ \ \ \ =\ 0x003A,\ \textcolor{comment}{//\ Motorola\ Star*Core\ DSP}}
+\DoxyCodeLine{00171\ \ \ \ \ ME16\ \ \ \ \ \ \ \ =\ 0x003B,\ \textcolor{comment}{//\ Toyota\ ME16\ processor}}
+\DoxyCodeLine{00172\ \ \ \ \ ST100\ \ \ \ \ \ \ =\ 0x003C,\ \textcolor{comment}{//\ STMicroelectronics\ ST100}}
+\DoxyCodeLine{00173\ \ \ \ \ TINYJ\ \ \ \ \ \ \ =\ 0x003D,\ \textcolor{comment}{//\ Advanced\ Logic\ TinyJ\ (Java\ processor)}}
+\DoxyCodeLine{00174\ \ \ \ \ X86\_64\ \ \ \ \ \ =\ 0x003E,\ \textcolor{comment}{//\ AMD\ x86-\/64\ (x86\_64)}}
+\DoxyCodeLine{00175\ \ \ \ \ PDSP\ \ \ \ \ \ \ \ =\ 0x003F,\ \textcolor{comment}{//\ Sony\ DSP}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ \ \ \ \ PDP10\ \ \ \ \ \ \ =\ 0x0040,\ \textcolor{comment}{//\ DEC\ PDP-\/10}}
+\DoxyCodeLine{00178\ \ \ \ \ PDP11\ \ \ \ \ \ \ =\ 0x0041,\ \textcolor{comment}{//\ DEC\ PDP-\/11}}
+\DoxyCodeLine{00179\ \ \ \ \ FX66\ \ \ \ \ \ \ \ =\ 0x0042,\ \textcolor{comment}{//\ Siemens\ FX66\ microcontroller}}
+\DoxyCodeLine{00180\ \ \ \ \ ST9PLUS\ \ \ \ \ =\ 0x0043,\ \textcolor{comment}{//\ STMicroelectronics\ ST9+}}
+\DoxyCodeLine{00181\ \ \ \ \ ST7\ \ \ \ \ \ \ \ \ =\ 0x0044,\ \textcolor{comment}{//\ STMicroelectronics\ ST7}}
+\DoxyCodeLine{00182\ \ \ \ \ MC68HC16\ \ \ \ =\ 0x0045,\ \textcolor{comment}{//\ Motorola\ MC68HC16}}
+\DoxyCodeLine{00183\ \ \ \ \ MC68HC11\ \ \ \ =\ 0x0046,\ \textcolor{comment}{//\ Motorola\ MC68HC11}}
+\DoxyCodeLine{00184\ \ \ \ \ MC68HC08\ \ \ \ =\ 0x0047,\ \textcolor{comment}{//\ Motorola\ MC68HC08}}
+\DoxyCodeLine{00185\ \ \ \ \ MC68HC05\ \ \ \ =\ 0x0048,\ \textcolor{comment}{//\ Motorola\ MC68HC05}}
+\DoxyCodeLine{00186\ \ \ \ \ SVX\ \ \ \ \ \ \ \ \ =\ 0x0049,\ \textcolor{comment}{//\ Silicon\ Graphics\ SVx}}
+\DoxyCodeLine{00187\ \ \ \ \ ST19\ \ \ \ \ \ \ \ =\ 0x004A,\ \textcolor{comment}{//\ STMicroelectronics\ ST19}}
+\DoxyCodeLine{00188\ \ \ \ \ VAX\ \ \ \ \ \ \ \ \ =\ 0x004B,\ \textcolor{comment}{//\ DEC\ VAX}}
+\DoxyCodeLine{00189\ \ \ \ \ CRIS\ \ \ \ \ \ \ \ =\ 0x004C,\ \textcolor{comment}{//\ Axis\ Communications\ CRIS}}
+\DoxyCodeLine{00190\ \ \ \ \ JAVELIN\ \ \ \ \ =\ 0x004D,\ \textcolor{comment}{//\ Infineon\ Javelin}}
+\DoxyCodeLine{00191\ \ \ \ \ FIREPATH\ \ \ \ =\ 0x004E,\ \textcolor{comment}{//\ Element\ 14\ FirePath\ DSP}}
+\DoxyCodeLine{00192\ \ \ \ \ ZSP\ \ \ \ \ \ \ \ \ =\ 0x004F,\ \textcolor{comment}{//\ LSI\ Logic\ ZSP\ DSP}}
+\DoxyCodeLine{00193\ \ \ \ \ MMIX\ \ \ \ \ \ \ \ =\ 0x0050,\ \textcolor{comment}{//\ Donald\ Knuth's\ educational\ MMIX}}
+\DoxyCodeLine{00194\ \ \ \ \ HUANY\ \ \ \ \ \ \ =\ 0x0051,\ \textcolor{comment}{//\ Harvard\ University\ machine\ (experimental)}}
+\DoxyCodeLine{00195\ \ \ \ \ PRISM\ \ \ \ \ \ \ =\ 0x0052,\ \textcolor{comment}{//\ SiTera\ Prism}}
+\DoxyCodeLine{00196\ \ \ \ \ AVR\ \ \ \ \ \ \ \ \ =\ 0x0053,\ \textcolor{comment}{//\ Atmel\ AVR\ 8-\/bit\ microcontroller}}
+\DoxyCodeLine{00197\ \ \ \ \ FR30\ \ \ \ \ \ \ \ =\ 0x0054,\ \textcolor{comment}{//\ Fujitsu\ FR30}}
+\DoxyCodeLine{00198\ \ \ \ \ D10V\ \ \ \ \ \ \ \ =\ 0x0055,\ \textcolor{comment}{//\ Mitsubishi\ D10V}}
+\DoxyCodeLine{00199\ \ \ \ \ D30V\ \ \ \ \ \ \ \ =\ 0x0056,\ \textcolor{comment}{//\ Mitsubishi\ D30V}}
+\DoxyCodeLine{00200\ \ \ \ \ V850\ \ \ \ \ \ \ \ =\ 0x0057,\ \textcolor{comment}{//\ NEC\ V850}}
+\DoxyCodeLine{00201\ \ \ \ \ M32R\ \ \ \ \ \ \ \ =\ 0x0058,\ \textcolor{comment}{//\ Mitsubishi\ M32R}}
+\DoxyCodeLine{00202\ \ \ \ \ MN10300\ \ \ \ \ =\ 0x0059,\ \textcolor{comment}{//\ Panasonic\ MN10300}}
+\DoxyCodeLine{00203\ \ \ \ \ MN10200\ \ \ \ \ =\ 0x005A,\ \textcolor{comment}{//\ Panasonic\ MN10200}}
+\DoxyCodeLine{00204\ \ \ \ \ PJ\ \ \ \ \ \ \ \ \ \ =\ 0x005B,\ \textcolor{comment}{//\ PicoJava\ (Java\ processor)}}
+\DoxyCodeLine{00205\ \ \ \ \ OPENRISC\ \ \ \ =\ 0x005C,\ \textcolor{comment}{//\ OpenRISC\ 32-\/bit}}
+\DoxyCodeLine{00206\ \ \ \ \ ARC\_COMPACT\ =\ 0x005D,\ \textcolor{comment}{//\ ARC\ Compact\ ISA}}
+\DoxyCodeLine{00207\ \ \ \ \ XTENSA\ \ \ \ \ \ =\ 0x005E,\ \textcolor{comment}{//\ Tensilica\ Xtensa}}
+\DoxyCodeLine{00208\ \ \ \ \ VIDEOCORE\ \ \ =\ 0x005F,\ \textcolor{comment}{//\ Broadcom\ VideoCore}}
+\DoxyCodeLine{00209\ \ \ \ \ TMM\_GPP\ \ \ \ \ =\ 0x0060,\ \textcolor{comment}{//\ Thompson\ Multimedia\ GPP}}
+\DoxyCodeLine{00210\ \ \ \ \ NS32K\ \ \ \ \ \ \ =\ 0x0061,\ \textcolor{comment}{//\ National\ Semiconductor\ 32K}}
+\DoxyCodeLine{00211\ \ \ \ \ TPC\ \ \ \ \ \ \ \ \ =\ 0x0062,\ \textcolor{comment}{//\ Tenor\ Network\ TPC}}
+\DoxyCodeLine{00212\ \ \ \ \ SNP1K\ \ \ \ \ \ \ =\ 0x0063,\ \textcolor{comment}{//\ Trebia\ SNP\ 1000}}
+\DoxyCodeLine{00213\ \ \ \ \ ST200\ \ \ \ \ \ \ =\ 0x0064,\ \textcolor{comment}{//\ STMicroelectronics\ ST200}}
+\DoxyCodeLine{00214\ \ \ \ \ IP2K\ \ \ \ \ \ \ \ =\ 0x0065,\ \textcolor{comment}{//\ Ubicom\ IP2xxx}}
+\DoxyCodeLine{00215\ \ \ \ \ MAX\ \ \ \ \ \ \ \ \ =\ 0x0066,\ \textcolor{comment}{//\ MAX\ processor}}
+\DoxyCodeLine{00216\ \ \ \ \ CR\ \ \ \ \ \ \ \ \ \ =\ 0x0067,\ \textcolor{comment}{//\ National\ Semiconductor\ CompactRISC}}
+\DoxyCodeLine{00217\ \ \ \ \ F2MC16\ \ \ \ \ \ =\ 0x0068,\ \textcolor{comment}{//\ Fujitsu\ F2MC16}}
+\DoxyCodeLine{00218\ \ \ \ \ MSP430\ \ \ \ \ \ =\ 0x0069,\ \textcolor{comment}{//\ Texas\ Instruments\ MSP430}}
+\DoxyCodeLine{00219\ \ \ \ \ BLACKFIN\ \ \ \ =\ 0x006A,\ \textcolor{comment}{//\ Analog\ Devices\ Blackfin\ DSP}}
+\DoxyCodeLine{00220\ \ \ \ \ SE\_C33\ \ \ \ \ \ =\ 0x006B,\ \textcolor{comment}{//\ Seiko\ Epson\ C33}}
+\DoxyCodeLine{00221\ \ \ \ \ SEP\ \ \ \ \ \ \ \ \ =\ 0x006C,\ \textcolor{comment}{//\ Sharp\ embedded\ processor}}
+\DoxyCodeLine{00222\ \ \ \ \ ARCA\ \ \ \ \ \ \ \ =\ 0x006D,\ \textcolor{comment}{//\ Arca\ RISC}}
+\DoxyCodeLine{00223\ \ \ \ \ UNICORE\ \ \ \ \ =\ 0x006E,\ \textcolor{comment}{//\ PKU-\/Unity\ UniCore}}
+\DoxyCodeLine{00224\ \ \ \ \ EXCESS\ \ \ \ \ \ =\ 0x006F,\ \textcolor{comment}{//\ eXcess\ configurable\ CPU}}
+\DoxyCodeLine{00225\ \ \ \ \ DXP\ \ \ \ \ \ \ \ \ =\ 0x0070,\ \textcolor{comment}{//\ Icera\ Deep\ Execution\ Processor}}
+\DoxyCodeLine{00226\ \ \ \ \ ALTERA\_NIOS2=\ 0x0071,\ \textcolor{comment}{//\ Altera\ Nios\ II\ soft-\/core\ CPU}}
+\DoxyCodeLine{00227\ \ \ \ \ CRX\ \ \ \ \ \ \ \ \ =\ 0x0072\ \ \textcolor{comment}{//\ National\ Semiconductor\ CRX}}
+\DoxyCodeLine{00228\ \};}
+\DoxyCodeLine{00229\ }
+\DoxyCodeLine{00234\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classElf_ae7c01e0d54ad35e1668d96dfa70b258e}{Elf}}\ }
+\DoxyCodeLine{00235\ \{}
+\DoxyCodeLine{00236\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ std::string\ m\_filename;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ std::variant<Elf\_Header32,\ Elf\_Header64>\ m\_elf\_header;}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ extract\_headers(std::ifstream\ elf\_file);}
+\DoxyCodeLine{00241\ }
+\DoxyCodeLine{00242\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ basic\ constructor}}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classElf_ae7c01e0d54ad35e1668d96dfa70b258e}{Elf}}(std::string\ filename);}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classElf_ad5da942692a2cf5f567fd66acc618da7}{print\_headers}}();}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ getters}}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ std::string\&\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classElf_a358cbba83d11f44cbfcf5b16d81f2615}{get\_filename}}();}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ std::variant<Elf\_Header32,\ Elf\_Header64>\&\ \ \ \mbox{\hyperlink{classElf_a92dc7044fa12811a3ba947a5c8b4bf24}{get\_header}}();}
+\DoxyCodeLine{00251\ \};}
+\DoxyCodeLine{00252\ }
+\DoxyCodeLine{00253\ \textcolor{preprocessor}{\#endif\ }\textcolor{comment}{/*\ ELF\_HPP\ */}\textcolor{preprocessor}{}}
+
+\end{DoxyCode}

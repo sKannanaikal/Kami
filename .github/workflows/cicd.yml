@@ -28,8 +28,11 @@ jobs:
       - name: Create binary
         run: cd ./build && make
 
-      - name: Run binary
-        run: ./build/kami
+      - name: Check binary usage info
+        run: ./build/kami --help
+
+      - name: Extract headers
+        run: ./build/kami -h -f ./test/bins/hello
 
       - name: Cleaning up
         run: cd ./build && make clean

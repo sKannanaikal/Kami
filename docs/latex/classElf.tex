@@ -1,0 +1,92 @@
+\doxysection{Elf Class Reference}
+\hypertarget{classElf}{}\label{classElf}\index{Elf@{Elf}}
+
+
+class representing elf binary  
+
+
+
+
+{\ttfamily \#include $<$elf.\+hpp$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classElf_ae7c01e0d54ad35e1668d96dfa70b258e}{Elf}} (std\+::string filename)
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classElf}{Elf}\+:\+: \doxylink{classElf}{Elf} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classElf_ad5da942692a2cf5f567fd66acc618da7}{print\+\_\+headers}} ()
+\begin{DoxyCompactList}\small\item\em will output the elf headers in a neat and user friendly manner \end{DoxyCompactList}\item 
+std\+::string \& \mbox{\hyperlink{classElf_a358cbba83d11f44cbfcf5b16d81f2615}{get\+\_\+filename}} ()
+\begin{DoxyCompactList}\small\item\em Getter for \doxylink{classElf}{Elf} filename. \end{DoxyCompactList}\item 
+std\+::variant$<$ \mbox{\hyperlink{elf_8hpp_a6dab4f5c5f90351bf02ec44fe23e06de}{Elf\+\_\+\+Header32}}, \mbox{\hyperlink{elf_8hpp_a32d2d3deb7a695d0b081edf569c4671c}{Elf\+\_\+\+Header64}} $>$ \& \mbox{\hyperlink{classElf_a92dc7044fa12811a3ba947a5c8b4bf24}{get\+\_\+header}} ()
+\begin{DoxyCompactList}\small\item\em Getter for \doxylink{classElf}{Elf} header struct. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class representing elf binary 
+
+\label{doc-constructors}
+\Hypertarget{classElf_doc-constructors}
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classElf_ae7c01e0d54ad35e1668d96dfa70b258e}\index{Elf@{Elf}!Elf@{Elf}}
+\index{Elf@{Elf}!Elf@{Elf}}
+\doxysubsubsection{\texorpdfstring{Elf()}{Elf()}}
+{\footnotesize\ttfamily \label{classElf_ae7c01e0d54ad35e1668d96dfa70b258e} 
+Elf\+::\+Elf (\begin{DoxyParamCaption}\item[{std\+::string}]{filename}{}\end{DoxyParamCaption})}
+
+
+
+Construct a new \doxylink{classElf}{Elf}\+:\+: \doxylink{classElf}{Elf} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & the file location for the elf binary \\
+\hline
+\end{DoxyParams}
+m\+\_\+elf\+\_\+header is a variant it can either be a {\ttfamily Elf\+\_\+header32} or {\ttfamily Elf\+\_\+header64} we only know its value after reading the 5th byte from the e\+\_\+ident array in the elf header once we knowo what type it is we just go ahead and read the number of bytes corresponding to the right struct and fill it out automatically.
+
+\label{doc-func-members}
+\Hypertarget{classElf_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classElf_a358cbba83d11f44cbfcf5b16d81f2615}\index{Elf@{Elf}!get\_filename@{get\_filename}}
+\index{get\_filename@{get\_filename}!Elf@{Elf}}
+\doxysubsubsection{\texorpdfstring{get\_filename()}{get\_filename()}}
+{\footnotesize\ttfamily \label{classElf_a358cbba83d11f44cbfcf5b16d81f2615} 
+std\+::string \& Elf\+::get\+\_\+filename (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Getter for \doxylink{classElf}{Elf} filename. 
+
+\begin{DoxyReturn}{Returns}
+std\+::string\& 
+\end{DoxyReturn}
+\Hypertarget{classElf_a92dc7044fa12811a3ba947a5c8b4bf24}\index{Elf@{Elf}!get\_header@{get\_header}}
+\index{get\_header@{get\_header}!Elf@{Elf}}
+\doxysubsubsection{\texorpdfstring{get\_header()}{get\_header()}}
+{\footnotesize\ttfamily \label{classElf_a92dc7044fa12811a3ba947a5c8b4bf24} 
+std\+::variant$<$ \mbox{\hyperlink{elf_8hpp_a6dab4f5c5f90351bf02ec44fe23e06de}{Elf\+\_\+\+Header32}}, \mbox{\hyperlink{elf_8hpp_a32d2d3deb7a695d0b081edf569c4671c}{Elf\+\_\+\+Header64}} $>$ \& Elf\+::get\+\_\+header (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Getter for \doxylink{classElf}{Elf} header struct. 
+
+\begin{DoxyReturn}{Returns}
+std\+::variant$<$\+Elf\+\_\+\+Header32, Elf\+\_\+\+Header64$>$\& 
+\end{DoxyReturn}
+\Hypertarget{classElf_ad5da942692a2cf5f567fd66acc618da7}\index{Elf@{Elf}!print\_headers@{print\_headers}}
+\index{print\_headers@{print\_headers}!Elf@{Elf}}
+\doxysubsubsection{\texorpdfstring{print\_headers()}{print\_headers()}}
+{\footnotesize\ttfamily \label{classElf_ad5da942692a2cf5f567fd66acc618da7} 
+void Elf\+::print\+\_\+headers (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+will output the elf headers in a neat and user friendly manner 
+
+because elf\+\_\+header is a variant need to use visit along with a general nameless function to be able to safely/easily handle the 2 elf header types and printing out their values helpful because the elf headers are the same aside from a couple of value
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/arbiter/\+Documents/\+Projects/\+Kami/src/lib/\mbox{\hyperlink{elf_8hpp}{elf.\+hpp}}\item 
+/home/arbiter/\+Documents/\+Projects/\+Kami/src/lib/\mbox{\hyperlink{elf_8cpp}{elf.\+cpp}}\end{DoxyCompactItemize}

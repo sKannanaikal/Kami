@@ -20,10 +20,10 @@ enable_testing()
 add_executable(kami_test kami_test.cpp)
 
 # Bringing in our library code to test
-add_library(test_library STATIC ../src/lib/test.cpp)
+add_library(elf_library STATIC ../src/lib/elf.cpp)
 
 # Link in the gtest library and source and eventually kami source as well as a library
-target_link_libraries(kami_test GTest::gtest_main test_library)
+target_link_libraries(kami_test GTest::gtest_main elf_library)
 
 include(GoogleTest)
 gtest_discover_tests(kami_test)

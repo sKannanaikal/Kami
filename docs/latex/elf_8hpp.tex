@@ -1,0 +1,209 @@
+\doxysection{/home/arbiter/\+Documents/\+Projects/\+Kami/src/lib/elf.hpp File Reference}
+\hypertarget{elf_8hpp}{}\label{elf_8hpp}\index{/home/arbiter/Documents/Projects/Kami/src/lib/elf.hpp@{/home/arbiter/Documents/Projects/Kami/src/lib/elf.hpp}}
+
+
+header file for elf implementation  
+
+
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$variant$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structelf__header64}{elf\+\_\+header64}}
+\begin{DoxyCompactList}\small\item\em the structure of the 64 bit elf header \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structelf__header32}{elf\+\_\+header32}}
+\begin{DoxyCompactList}\small\item\em structure representing 32 bit elf header \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classElf}{Elf}}
+\begin{DoxyCompactList}\small\item\em class representing elf binary \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{elf_8hpp_a32d2d3deb7a695d0b081edf569c4671c}\label{elf_8hpp_a32d2d3deb7a695d0b081edf569c4671c} 
+typedef struct \mbox{\hyperlink{structelf__header64}{elf\+\_\+header64}} {\bfseries Elf\+\_\+\+Header64}
+\begin{DoxyCompactList}\small\item\em the structure of the 64 bit elf header \end{DoxyCompactList}\item 
+\Hypertarget{elf_8hpp_a6dab4f5c5f90351bf02ec44fe23e06de}\label{elf_8hpp_a6dab4f5c5f90351bf02ec44fe23e06de} 
+typedef struct \mbox{\hyperlink{structelf__header32}{elf\+\_\+header32}} {\bfseries Elf\+\_\+\+Header32}
+\begin{DoxyCompactList}\small\item\em structure representing 32 bit elf header \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{elf_8hpp_ab614e98180c5e8c1a9a52f59c4de8302}\label{elf_8hpp_ab614e98180c5e8c1a9a52f59c4de8302} 
+enum class \mbox{\hyperlink{elf_8hpp_ab614e98180c5e8c1a9a52f59c4de8302}{OSABI}} \+: std\+::uint8\+\_\+t \{ \newline
+{\bfseries NONE} = 0x00
+, {\bfseries HPUX} = 0x01
+, {\bfseries NETBSD} = 0x02
+, {\bfseries LINUX} = 0x03
+, \newline
+{\bfseries SOLARIS} = 0x06
+, {\bfseries AIX} = 0x07
+, {\bfseries IRIX} = 0x08
+, {\bfseries FREEBSD} = 0x09
+, \newline
+{\bfseries TRU64} = 0x0A
+, {\bfseries MODESTO} = 0x0B
+, {\bfseries OPENBSD} = 0x0C
+, {\bfseries OPENVMS} = 0x0D
+, \newline
+{\bfseries NSK} = 0x0E
+ \}
+\begin{DoxyCompactList}\small\item\em enum mapping of all 1 byte values for {\ttfamily os abi} in elf header \end{DoxyCompactList}\item 
+\Hypertarget{elf_8hpp_ac13142f873e76718d2c0007877d9c74a}\label{elf_8hpp_ac13142f873e76718d2c0007877d9c74a} 
+enum class \mbox{\hyperlink{elf_8hpp_ac13142f873e76718d2c0007877d9c74a}{Object\+\_\+\+File\+\_\+\+Type}} \+: std\+::uint16\+\_\+t \{ \newline
+{\bfseries NONE} = 0x0000
+, {\bfseries REL} = 0x0001
+, {\bfseries EXEC} = 0x0002
+, {\bfseries DYN} = 0x0003
+, \newline
+{\bfseries CORE} = 0x0004
+, {\bfseries LOOS} = 0x\+FE00
+, {\bfseries HIOS} = 0x\+FEFF
+, {\bfseries LOPROC} = 0x\+FF00
+, \newline
+{\bfseries HIPROC} = 0x\+FFFF
+ \}
+\begin{DoxyCompactList}\small\item\em enum mapping of all 2 byte values for {\ttfamily type} in elf header \end{DoxyCompactList}\item 
+\Hypertarget{elf_8hpp_a7316aded980abf5b41f093240009690d}\label{elf_8hpp_a7316aded980abf5b41f093240009690d} 
+enum class \mbox{\hyperlink{elf_8hpp_a7316aded980abf5b41f093240009690d}{Machine}} \+: std\+::uint16\+\_\+t \{ \newline
+{\bfseries NONE} = 0x0000
+, {\bfseries M32} = 0x0001
+, {\bfseries SPARC} = 0x0002
+, {\bfseries EM\+\_\+386} = 0x0003
+, \newline
+{\bfseries EM\+\_\+68K} = 0x0004
+, {\bfseries EM\+\_\+88K} = 0x0005
+, {\bfseries IAMCU} = 0x0006
+, {\bfseries EM\+\_\+860} = 0x0007
+, \newline
+{\bfseries MIPS} = 0x0008
+, {\bfseries S370} = 0x0009
+, {\bfseries MIPS\+\_\+\+RS3\+\_\+\+LE} = 0x000A
+, {\bfseries PARISC} = 0x000F
+, \newline
+{\bfseries VPP500} = 0x0011
+, {\bfseries SPARC32\+PLUS} = 0x0012
+, {\bfseries I960} = 0x0013
+, {\bfseries PPC} = 0x0014
+, \newline
+{\bfseries PPC64} = 0x0015
+, {\bfseries S390} = 0x0016
+, {\bfseries SPU} = 0x0017
+, {\bfseries V800} = 0x0024
+, \newline
+{\bfseries FR20} = 0x0025
+, {\bfseries RH32} = 0x0026
+, {\bfseries RCE} = 0x0027
+, {\bfseries ARM} = 0x0028
+, \newline
+{\bfseries ALPHA} = 0x0029
+, {\bfseries SH} = 0x002A
+, {\bfseries SPARCV9} = 0x002B
+, {\bfseries TRICORE} = 0x002C
+, \newline
+{\bfseries ARC} = 0x002D
+, {\bfseries H8\+\_\+300} = 0x002E
+, {\bfseries H8\+\_\+300H} = 0x002F
+, {\bfseries H8S} = 0x0030
+, \newline
+{\bfseries H8\+\_\+500} = 0x0031
+, {\bfseries IA\+\_\+64} = 0x0032
+, {\bfseries MIPS\+\_\+X} = 0x0033
+, {\bfseries COLDFIRE} = 0x0034
+, \newline
+{\bfseries M68\+HC12} = 0x0035
+, {\bfseries MMA} = 0x0036
+, {\bfseries PCP} = 0x0037
+, {\bfseries NCPU} = 0x0038
+, \newline
+{\bfseries NDR1} = 0x0039
+, {\bfseries STARCORE} = 0x003A
+, {\bfseries ME16} = 0x003B
+, {\bfseries ST100} = 0x003C
+, \newline
+{\bfseries TINYJ} = 0x003D
+, {\bfseries X86\+\_\+64} = 0x003E
+, {\bfseries PDSP} = 0x003F
+, {\bfseries PDP10} = 0x0040
+, \newline
+{\bfseries PDP11} = 0x0041
+, {\bfseries FX66} = 0x0042
+, {\bfseries ST9\+PLUS} = 0x0043
+, {\bfseries ST7} = 0x0044
+, \newline
+{\bfseries MC68\+HC16} = 0x0045
+, {\bfseries MC68\+HC11} = 0x0046
+, {\bfseries MC68\+HC08} = 0x0047
+, {\bfseries MC68\+HC05} = 0x0048
+, \newline
+{\bfseries SVX} = 0x0049
+, {\bfseries ST19} = 0x004A
+, {\bfseries VAX} = 0x004B
+, {\bfseries CRIS} = 0x004C
+, \newline
+{\bfseries JAVELIN} = 0x004D
+, {\bfseries FIREPATH} = 0x004E
+, {\bfseries ZSP} = 0x004F
+, {\bfseries MMIX} = 0x0050
+, \newline
+{\bfseries HUANY} = 0x0051
+, {\bfseries PRISM} = 0x0052
+, {\bfseries AVR} = 0x0053
+, {\bfseries FR30} = 0x0054
+, \newline
+{\bfseries D10V} = 0x0055
+, {\bfseries D30V} = 0x0056
+, {\bfseries V850} = 0x0057
+, {\bfseries M32R} = 0x0058
+, \newline
+{\bfseries MN10300} = 0x0059
+, {\bfseries MN10200} = 0x005A
+, {\bfseries PJ} = 0x005B
+, {\bfseries OPENRISC} = 0x005C
+, \newline
+{\bfseries ARC\+\_\+\+COMPACT} = 0x005D
+, {\bfseries XTENSA} = 0x005E
+, {\bfseries VIDEOCORE} = 0x005F
+, {\bfseries TMM\+\_\+\+GPP} = 0x0060
+, \newline
+{\bfseries NS32K} = 0x0061
+, {\bfseries TPC} = 0x0062
+, {\bfseries SNP1K} = 0x0063
+, {\bfseries ST200} = 0x0064
+, \newline
+{\bfseries IP2K} = 0x0065
+, {\bfseries MAX} = 0x0066
+, {\bfseries CR} = 0x0067
+, {\bfseries F2\+MC16} = 0x0068
+, \newline
+{\bfseries MSP430} = 0x0069
+, {\bfseries BLACKFIN} = 0x006A
+, {\bfseries SE\+\_\+\+C33} = 0x006B
+, {\bfseries SEP} = 0x006C
+, \newline
+{\bfseries ARCA} = 0x006D
+, {\bfseries UNICORE} = 0x006E
+, {\bfseries EXCESS} = 0x006F
+, {\bfseries DXP} = 0x0070
+, \newline
+{\bfseries ALTERA\+\_\+\+NIOS2} = 0x0071
+, {\bfseries CRX} = 0x0072
+ \}
+\begin{DoxyCompactList}\small\item\em enum mapping of all 2 byte values for {\ttfamily machine} in elf header \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+header file for elf implementation 
+
+\begin{DoxyAuthor}{Author}
+Sean Kannanaikal 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2026-\/05-\/02
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2026 
+\end{DoxyCopyright}
