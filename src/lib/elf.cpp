@@ -12,6 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 #include "elf.hpp"
 #include "returncodes.hpp"
 
@@ -46,18 +47,47 @@ Elf::Elf(std::string filename) : m_filename(filename)
      * the right struct and fill it out automatically.
      */
 
-	if (binary_type == 0x01)  //32 bit header
-	{
+	if (binary_type == 0x01)  //32 bit headers
+	{   
+        // getting elf header
 		Elf_Header32 header;
 		elf_file.read(reinterpret_cast<char *>(&header), sizeof(header));
 		this->m_elf_header = header;
+        
+        // getting section headers
+        Elf_S_Header32 s_header;
+        uint32_t offset = header.e_shoff;
+        for (uint16_t iterator = 0; iterator < header.e_shnum; iterator++) 
+        {
+            elf_file.seekg(offset);
+            elf_file.read(reinterpret_cast<char *>(&s_header), sizeof(s_header));
+            this->m_elf_s_headers.push_back(s_header);
+            offset += sizeof(Elf_S_Header32);
+        }
+        
+        
 	}
-	else if (binary_type == 0x02) //64 bit header
+	else if (binary_type == 0x02) //64 bit headers
 	{
+        // getting elf header
 		Elf_Header64 header;
 		elf_file.read(reinterpret_cast<char *>(&header), sizeof(header));
 		this->m_elf_header = header;
+
+        // getting section headers
+        Elf_S_Header64 s_header;
+        uint64_t offset = header.e_shoff;
+        for (uint16_t iterator = 0; iterator < header.e_shnum; iterator++) 
+        {
+            elf_file.seekg(offset);
+            elf_file.read(reinterpret_cast<char *>(&s_header), sizeof(s_header));
+            this->m_elf_s_headers.push_back(s_header);
+            offset += sizeof(Elf_S_Header64);
+        }
 	}
+
+    //closing file after use
+    elf_file.close();
 }
 
 /**
@@ -78,6 +108,11 @@ std::string& Elf::get_filename()
 std::variant<Elf_Header32, Elf_Header64>& Elf::get_header()
 {
 	return this->m_elf_header;
+}
+
+std::vector<std::variant<Elf_S_Header32, Elf_S_Header64>>&   Elf::get_s_header()
+{
+    return this->m_elf_s_headers;
 }
 
 /**
@@ -264,6 +299,152 @@ static std::string _convert_machine(std::uint16_t machine)
 }
 
 /**
+ * @brief Converts the ELF section header `sh_type` value into a readable string
+ * 
+ * @param sh_type 4-byte section type value from Elf32_Shdr / Elf64_Shdr
+ * @return std::string Human-readable section type
+ */
+static std::string _convert_stype(std::uint32_t sh_type)
+{
+    switch (static_cast<SectionHeaderType>(sh_type))
+    {
+    case SectionHeaderType::SHT_NULL:           return "Unused section entry";
+    case SectionHeaderType::SHT_PROGBITS:       return "Program data";
+    case SectionHeaderType::SHT_SYMTAB:         return "Symbol table";
+    case SectionHeaderType::SHT_STRTAB:         return "String table";
+    case SectionHeaderType::SHT_RELA:           return "Relocation entries with addends";
+    case SectionHeaderType::SHT_HASH:           return "Symbol hash table";
+    case SectionHeaderType::SHT_DYNAMIC:        return "Dynamic linking information";
+    case SectionHeaderType::SHT_NOTE:           return "Note section";
+    case SectionHeaderType::SHT_NOBITS:         return "No file contents (.bss)";
+    case SectionHeaderType::SHT_REL:            return "Relocation entries";
+    case SectionHeaderType::SHT_SHLIB:          return "Reserved";
+    case SectionHeaderType::SHT_DYNSYM:         return "Dynamic linker symbol table";
+    case SectionHeaderType::SHT_INIT_ARRAY:     return "Constructor function array";
+    case SectionHeaderType::SHT_FINI_ARRAY:     return "Destructor function array";
+    case SectionHeaderType::SHT_PREINIT_ARRAY:  return "Pre-constructor function array";
+    case SectionHeaderType::SHT_GROUP:          return "Section group";
+    case SectionHeaderType::SHT_SYMTAB_SHNDX:   return "Extended symbol indices";
+    case SectionHeaderType::SHT_LOOS:           return "OS-specific (low bound)";
+    case SectionHeaderType::SHT_HIOS:           return "OS-specific (high bound)";
+    case SectionHeaderType::SHT_LOPROC:         return "Processor-specific (low bound)";
+    case SectionHeaderType::SHT_HIPROC:         return "Processor-specific (high bound)";
+    case SectionHeaderType::SHT_LOUSER:         return "Application-specific (low bound)";
+    case SectionHeaderType::SHT_HIUSER:         return "Application-specific (high bound)";
+    default:                                    return "Unknown section type";
+    }
+}
+
+/**
+ * @brief Converts ELF section header flags into a readable string
+ * 
+ * @param sh_flags Section header flags field (`sh_flags`)
+ * @return std::string Human-readable flag list
+ */
+static std::string _convert_sflags(std::uint32_t sh_flags)
+{
+    std::string flags = "";
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_WRITE))
+    {
+        flags += "SHF_WRITE";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_ALLOC))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_ALLOC";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_EXECINSTR))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_EXECINSTR";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_MERGE))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_MERGE";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_STRINGS))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_STRINGS";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_INFO_LINK))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_INFO_LINK";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_LINK_ORDER))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_LINK_ORDER";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_OS_NONCONFORMING))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_OS_NONCONFORMING";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_GROUP))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_GROUP";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_TLS))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_TLS";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_MASKOS))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_MASKOS";
+    }
+
+    if (sh_flags & static_cast<std::uint32_t>(SectionHeaderFlags::SHF_MASKPROC))
+    {
+        if (!flags.empty())
+            flags += " | ";
+
+        flags += "SHF_MASKPROC";
+    }
+
+    if (flags.empty())
+        return "NONE";
+
+    return flags;
+}
+
+/**
  * @brief will output the elf headers in a neat and user friendly manner
  * 
  */
@@ -334,4 +515,65 @@ std::string Elf::print_headers()
 	}, this->m_elf_header);
 
 	return cli_output.str();
+}
+
+std::string Elf::get_section_name(std::uint32_t string_t_offset) {
+    std::string section_name;
+    
+    std::uint16_t shstrndx;
+    std::visit([&](auto&& elf_header)
+    {
+        shstrndx = elf_header.e_shstrndx;
+    }, this->m_elf_header);
+
+    std::variant<Elf_S_Header32, Elf_S_Header64> string_table_sheader = this->m_elf_s_headers.at(shstrndx);
+    std::string filename = get_filename();
+    std::visit([&section_name, &filename, &string_t_offset](auto && string_table_sheader) {
+        
+        //opening up file passed into constructor
+        std::ifstream elf_file {filename, std::ios::binary};
+        if (!elf_file)
+        {
+            std::cout << "[-] Unable to open up file " << filename << std::endl;
+            std::exit(returncodes::FILE_READ_ERROR);
+        }
+
+        // get to the file offset of the section header table and read the corresponding string_t_offset
+        std::vector<char> string_table(string_table_sheader.sh_size);
+        elf_file.seekg(string_table_sheader.sh_offset);
+        elf_file.read(string_table.data(), string_table.size());
+
+        section_name = &string_table[string_t_offset]; // not sure if this is going to read it up until the null character?
+
+        elf_file.close();
+    }, string_table_sheader);
+
+    return section_name; // not sure if this is going to be some scope issue now though
+}
+
+std::string Elf::print_s_headers()
+{
+    std::ostringstream cli_output;
+
+     /**
+     * because elf_header is a variant need to use visit along with a general nameless function
+     * to be able to  safely/easily handle the 2 elf header types and printing out their values
+     * helpful because the elf headers are the same aside from a couple of value
+     */
+    
+    for (int iterator = 0; iterator < this->m_elf_s_headers.size(); iterator++)
+    {
+        std::visit([this, &cli_output](auto && elf_s_header)
+        {	
+            cli_output << "Name: " << get_section_name(elf_s_header.sh_name) << "\n";
+            cli_output << "\t" << "Type: "<< _convert_stype(elf_s_header.sh_type) << "\n";
+            cli_output << "\t" << "Flags: "<< _convert_sflags(elf_s_header.sh_flags) << "\n";
+            cli_output << "\t" << "Virtual Address: "<< std::hex << elf_s_header.sh_addr << "\n";
+            cli_output << "\t" << "File offset: "<< std::dec << elf_s_header.sh_offset << " (bytes)" << "\n";
+            cli_output << "\t" << "Section Size: "<< std::dec << elf_s_header.sh_size << " (bytes)" << "\n";
+            
+        },this->m_elf_s_headers.at(iterator));
+    }
+    
+    return cli_output.str();
 }

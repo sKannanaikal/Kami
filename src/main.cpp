@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 		descriptions.add_options()
 			("help", "Help Screen")
 			("headers,h", "Headers")
+			("sections,s", "Sections")
 			("file,f", boost::program_options::value<std::string>(&filepath), "File");
 		
 		boost::program_options::variables_map args;
@@ -48,6 +49,14 @@ int main(int argc, char *argv[])
 			//create a binary object of Elf class and print its headers
 			Elf binary(filepath);
 			std::string headers = binary.print_headers();
+			std::cout << headers << std::endl;
+			retcode = returncodes::SUCCESS;
+		}
+		else if (args.count("sections") && args.count("file")) //if requesting sections and file is passed in
+		{
+			//create a binary object of Elf class and prints the section headers
+			Elf binary(filepath);
+			std::string headers = binary.print_s_headers();
 			std::cout << headers << std::endl;
 			retcode = returncodes::SUCCESS;
 		}

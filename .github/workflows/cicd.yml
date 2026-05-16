@@ -1,13 +1,13 @@
 # Base workflow for building out tool with cmake on various operating systems
 
-name: Kami CICD pipeline with CMake
+name: Atlas CICD pipeline with CMake
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  build_and_run_kami:
+  build_and_run_atlas:
 
     runs-on: ubuntu-latest
 
@@ -29,10 +29,10 @@ jobs:
         run: cd ./build && make
 
       - name: Check binary usage info
-        run: ./build/kami --help
+        run: ./build/atlas --help
 
       - name: Extract headers
-        run: ./build/kami -h -f ./test/bins/hello
+        run: ./build/atlas -h -f ./test/bins/hello
 
       - name: Cleaning up
         run: cd ./build && make clean
@@ -55,7 +55,7 @@ jobs:
         run: cmake --build ./test/build
 
       - name: Run test binary
-        run: ./test/build/kami_test
+        run: ./test/build/atlas_test
 
       - name: Cleaning up
         run: cd ./test/build && make clean

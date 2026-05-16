@@ -11,6 +11,7 @@
 #include <string>
 #include <cstdint>
 #include <variant>
+#include <vector>
 
 #ifndef ELF_HPP
 #define ELF_HPP
@@ -77,6 +78,185 @@ typedef struct elf_header32
     std::uint16_t  e_shstrndx;  // Section name string table index
 
 } Elf_Header32;
+
+typedef struct sectionheader32 
+{
+    std::uint32_t sh_name;       // Offset into the section string table (.shstrtab)
+                                 // Points to the section's name string
+
+    std::uint32_t sh_type;       // Section type
+                                 // Examples:
+                                 // SHT_PROGBITS  -> normal data/code
+                                 // SHT_SYMTAB    -> symbol table
+                                 // SHT_STRTAB    -> string table
+
+    std::uint32_t sh_flags;      // Section attributes/flags
+                                 // Examples:
+                                 // SHF_ALLOC     -> loaded into memory
+                                 // SHF_EXECINSTR -> executable code
+                                 // SHF_WRITE     -> writable
+
+    std::uint32_t sh_addr;       // Virtual address of section in memory
+                                 // Meaningful after loader maps the ELF
+
+    std::uint32_t sh_offset;     // File offset of section data
+                                 // Offset from start of ELF file
+
+    std::uint32_t sh_size;       // Size of section in bytes
+
+    std::uint32_t sh_link;       // Section-specific index link
+                                 // Meaning depends on sh_type
+                                 // Example:
+                                 // Symbol table -> linked string table index
+
+    std::uint32_t sh_info;       // Extra section-specific information
+                                 // Meaning depends on sh_type
+
+    std::uint32_t sh_addralign;  // Required alignment of section
+                                 // Usually powers of 2
+                                 // Example: 16-byte alignment
+
+    std::uint32_t sh_entsize;    // Size of entries if section holds a table
+                                 // Example:
+                                 // Symbol table entry size
+                                 // Relocation entry size
+                                 // 0 if section is not table-like
+} Elf_S_Header32;
+
+
+typedef struct sectionheader64 
+{
+    std::uint32_t sh_name;       // Offset into section string table (.shstrtab)
+
+    std::uint32_t sh_type;       // Section type
+
+    std::uint64_t sh_flags;      // Section flags/attributes
+
+    std::uint64_t sh_addr;       // Virtual memory address of section
+
+    std::uint64_t sh_offset;     // File offset to section contents
+
+    std::uint64_t sh_size;       // Section size in bytes
+
+    std::uint32_t sh_link;       // Section index link (section-dependent)
+
+    std::uint32_t sh_info;       // Extra section metadata
+
+    std::uint64_t sh_addralign;  // Alignment requirement in memory/file
+
+    std::uint64_t sh_entsize;    // Entry size for table-like sections
+} Elf_S_Header64;
+
+enum class SectionHeaderType : std::uint32_t {
+
+    // Marks an unused section header entry
+    SHT_NULL           = 0x00000000,
+
+    // Program-defined data (code, data, etc.)
+    SHT_PROGBITS       = 0x00000001,
+
+    // Full symbol table for linking/debugging
+    SHT_SYMTAB         = 0x00000002,
+
+    // String table containing null-terminated strings
+    SHT_STRTAB         = 0x00000003,
+
+    // Relocation entries with explicit addends
+    SHT_RELA           = 0x00000004,
+
+    // Symbol hash table (used by dynamic linker)
+    SHT_HASH           = 0x00000005,
+
+    // Dynamic linking information (.dynamic)
+    SHT_DYNAMIC        = 0x00000006,
+
+    // Auxiliary information / metadata notes
+    SHT_NOTE           = 0x00000007,
+
+    // Section occupies no file space (.bss)
+    SHT_NOBITS         = 0x00000008,
+
+    // Relocation entries without explicit addends
+    SHT_REL            = 0x00000009,
+
+    // Reserved / unspecified semantics
+    SHT_SHLIB          = 0x0000000A,
+
+    // Dynamic linker symbol table
+    SHT_DYNSYM         = 0x0000000B,
+
+    // Array of constructor function pointers
+    SHT_INIT_ARRAY     = 0x0000000E,
+
+    // Array of destructor function pointers
+    SHT_FINI_ARRAY     = 0x0000000F,
+
+    // Constructors executed before normal init arrays
+    SHT_PREINIT_ARRAY  = 0x00000010,
+
+    // Section group information
+    SHT_GROUP          = 0x00000011,
+
+    // Extended section indices for symbol tables
+    SHT_SYMTAB_SHNDX   = 0x00000012,
+
+    // Lowest OS-specific section type value
+    SHT_LOOS           = 0x60000000,
+
+    // Highest OS-specific section type value
+    SHT_HIOS           = 0x6FFFFFFF,
+
+    // Lowest processor-specific section type value
+    SHT_LOPROC         = 0x70000000,
+
+    // Highest processor-specific section type value
+    SHT_HIPROC         = 0x7FFFFFFF,
+
+    // Lowest application-specific section type value
+    SHT_LOUSER         = 0x80000000,
+
+    // Highest application-specific section type value
+    SHT_HIUSER         = 0xFFFFFFFF
+};
+
+enum class SectionHeaderFlags : std::uint32_t {
+
+    // Section data is writable at runtime
+    SHF_WRITE             = 0x00000001,
+
+    // Section occupies memory during execution
+    SHF_ALLOC             = 0x00000002,
+
+    // Section contains executable machine instructions
+    SHF_EXECINSTR         = 0x00000004,
+
+    // Section may be merged by the linker
+    SHF_MERGE             = 0x00000010,
+
+    // Section contains null-terminated strings
+    SHF_STRINGS           = 0x00000020,
+
+    // sh_info field contains a section header table index
+    SHF_INFO_LINK         = 0x00000040,
+
+    // Preserve section ordering after combining
+    SHF_LINK_ORDER        = 0x00000080,
+
+    // Requires special OS-specific processing
+    SHF_OS_NONCONFORMING  = 0x00000100,
+
+    // Section is a member of a section group
+    SHF_GROUP             = 0x00000200,
+
+    // Section holds Thread Local Storage (TLS)
+    SHF_TLS               = 0x00000400,
+
+    // OS-specific flag mask
+    SHF_MASKOS            = 0x0FF00000,
+
+    // Processor-specific flag mask
+    SHF_MASKPROC          = 0xF0000000
+};
 
 /**
  * @brief enum mapping of all 1 byte values for `os abi` in elf header
@@ -236,6 +416,7 @@ class Elf
 	private:
 		std::string m_filename;
 		std::variant<Elf_Header32, Elf_Header64> m_elf_header;
+        std::vector<std::variant<Elf_S_Header32, Elf_S_Header64>> m_elf_s_headers;
 		
 		void extract_headers(std::ifstream elf_file);
 
@@ -244,10 +425,13 @@ class Elf
 		Elf(std::string filename);
 		
 		std::string print_headers();
+        std::string print_s_headers();
 		
 		// getters
-		std::string& 								get_filename();
-		std::variant<Elf_Header32, Elf_Header64>& 	get_header();
+		std::string& 								                 get_filename();
+		std::variant<Elf_Header32, Elf_Header64>& 	                 get_header();
+        std::vector<std::variant<Elf_S_Header32, Elf_S_Header64>>&   get_s_header();
+        std::string                                                  get_section_name(std::uint32_t index);
 };
 
 #endif /* ELF_HPP */
